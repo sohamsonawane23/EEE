@@ -1,0 +1,20 @@
+global _start
+section .data
+name db "Name : Jatin", 10
+len1 equ $ -name
+surname db "Surname: Kushwaha", 10
+len2 equ $ -surname
+section .text
+%macro print 2
+mov eax, 4
+mov ebx, 1
+mov ecx, %1
+mov edx, %2
+int 80h
+%endmacro
+_start:
+print name, len1
+print surname, len2
+mov eax ,1
+mov ebx, 0
+int 80h
