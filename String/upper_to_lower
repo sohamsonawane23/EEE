@@ -1,0 +1,30 @@
+global _start
+
+section .data
+s1 db 'HELLO, WORLD', 0
+len equ $ - s1
+
+section .bss
+s2 resb 20
+
+section .text
+_start:
+    mov ecx, len          ; Set loop counter to length of string
+    mov esi, s1           ; Source index = address of original string
+    mov edi, s2           ; Destination index = address of buffer for lowercase string
+
+loop_here:
+    lodsb                 ; Load byte at [ESI] into AL; ESI++
+    or al, 20h            ; Convert uppercase char to lowercase
+    stosb                 ; Store byte in AL at [EDI]; EDI++
+    loop loop_here        ; Loop until ECX == 0
+
+    mov edx, len          ; Message length to print
+    mov ecx, s2           ; Pointer to lowercase string
+    mov ebx, 1            ; File descriptor (stdout)
+    mov eax, 4            ; Syscall number (sys_write)
+    int 80h               ; Call kernel to print the string
+
+    mov eax, 1            ; Syscall number (sys_exit)
+    xor ebx, ebx          ; Exit code 0
+    int 80h               ; Exit the program
